@@ -12,7 +12,7 @@ markup.add("как тебя зовут?")
 markup.add("в каком ты городе?")
 markup.add("какой предмет в школе тебе нравится?")
 markup.add("что тебе нравится из еды?")
-
+markup.add("твой любимый жанр музыки?")
 class CalculatorBotStates(StatesGroup):
     wait_primer = State()
     communication = State()
@@ -50,7 +50,8 @@ async def calculate_primer(message: types.Message, state: FSMContext):
         await message.answer("физра,окружающий ииииииииииииииииии русский")
     if message.text == "что тебе нравится из еды?":
         await message.answer ("пастаааа мама мияяяяяя")
-
+    if message.text == "твой любимый жанр музыки?":
+        await message.answer ("рок")
 
 @dp.message_handler(commands="help")
 async def help(message: types.Message):
