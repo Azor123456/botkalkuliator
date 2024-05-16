@@ -3,6 +3,9 @@ from aiogram.types import ReplyKeyboardMarkup
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.types import InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton
+from googletrans import Translator
 import asyncio
 bot = Bot("7168174207:AAF1MwvTM2BLu0aNQ4itUlhuYYSILKXnpFQ")
 dp = Dispatcher(bot,storage=MemoryStorage())
@@ -13,6 +16,22 @@ markup.add("в каком ты городе?")
 markup.add("какой предмет в школе тебе нравится?")
 markup.add("что тебе нравится из еды?")
 markup.add("твой любимый жанр музыки?")
+
+
+markup_trans_from = InlineKeyboardMarkup(resize_keyboard=True)
+en_button = InlineKeyboardButton("английский", callback_data="from_en")
+ispan_button = InlineKeyboardButton("испанский", callback_data="from_ispan")
+franc_button = InlineKeyboardButton("французский", callback_data="from_franc")
+russ_button = InlineKeyboardButton("русский", callback_data="from_russ")
+markup_trans_from.add(en_button,ispan_button,franc_button,russ_button)
+
+markup_trans_to = InlineKeyboardMarkup(resize_keyboard=True)
+en_button = InlineKeyboardButton("английский", callback_data="to_en")
+ispan_button = InlineKeyboardButton("испанский", callback_data="to_ispan")
+franc_button = InlineKeyboardButton("французский", callback_data="to_franc")
+russ_button = InlineKeyboardButton("русский", callback_data="to_russ")
+markup_trans_to.add(en_button,ispan_button,franc_button,russ_button)
+
 class CalculatorBotStates(StatesGroup):
     wait_primer = State()
     communication = State()
@@ -22,6 +41,10 @@ class CalculatorBotStates(StatesGroup):
 async def calculate(message: types.Message, state: FSMContext):
     await message.answer("введите пример", reply_markup=types.ReplyKeyboardRemove())
     await state.set_state(CalculatorBotStates.wait_primer.state)
+
+@dp.message_handler(commands="translate")
+async def translate(message: types.Message, state: FSMContext):
+    await message.answer("выберите язык", reply_markup=markup_trans_from)
 
 @dp.message_handler(state=CalculatorBotStates.wait_primer)
 async def calculate_primer(message: types.Message, state: FSMContext):
